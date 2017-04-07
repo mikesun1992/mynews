@@ -1,0 +1,17 @@
+<?php
+session_start();
+if($_SESSION['user']=='')
+{
+header('location:login.php');
+exit();//等同于return
+}
+else{
+//不是管理员
+$user=(array)$_SESSION['user'];
+$roleName=$user['rolename'];
+if(substr_count('管理员',$roleName)==0){
+header('location:login.php');
+die('');	
+	}
+}
+?>

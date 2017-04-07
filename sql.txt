@@ -1,0 +1,70 @@
+#创建NMS数据库及建表代码：
+
+drop database if exists NMS;
+create database NMS default character set utf8 collate utf8_bin;
+use NMS;
+
+create table Role(
+roleID int primary key auto_increment,
+roleName varchar(32) not null
+);
+
+insert into Role(roleID,roleName) values(null,'管理员');
+insert into Role(roleID,roleName) values(null,'普通用户');
+
+create table User(
+userid int primary key auto_increment,
+loginid varchar(32) not null,
+pwd varchar(32) not null,
+userName varchar(32) not null,
+userSex char(2) default '男',
+userColor varchar(16),
+userBirthday int,
+userImage varchar(128) default 'images/nophoto.jpg',
+userFavorite varchar(32),
+userDescribe varchar(512),
+roleID int,
+foreign key(roleID) references Role(roleID)
+);
+
+Insert into User(userid,loginid,pwd,userName,userSex,userColor,userBirthday,userImage,userFavorite,userDescribe,roleID) values(null,'admin','3cf108a4e0a498347a5a75a792f23212','天涯的海风',default,'blue',410486400,'images/admin.jpg','玩电脑','人在天涯心即海，不如听海风',1);
+insert into User(userid,loginid,pwd,userName,userSex,userColor,userBirthday,userImage,userFavorite,userDescribe,roleID)    values(null,'test','6f4b726238e4edac373d1264dcb6f890','测试帐号昵称','女','red',726105600,default,'看书','测试个人帐号个人简介',2);
+
+create table News(
+newsID int primary key auto_increment,
+title varchar(512),
+Content text,
+addTime int,
+clickCount int default 0,
+userID int,
+foreign key(userID) references User(userID)
+);
+
+insert into News(newsID,title,Content,addTime,clickCount,userID) values(null,'截至今日，新安人才网热点新闻管理系统正式上线运营，欢迎访问','欢迎访问、测试，给与意见！',1478255785,0,1);
+insert into News(newsID,title,Content,addTime,clickCount,userID) values(null,'把握时尚浪潮，针别科技动态，新安人才网新闻管理系统一网打尽，你还等什么？','欢迎访问、测试，给与意见啊！',1478255786,0,2);
+insert into News(newsID,title,Content,addTime,clickCount,userID) values(null,'新安人才网新闻管理系统一网打尽，我身边的互联网信息专家','欢迎访问、测试，给与意见吧！',1478255786,0,1)
+
+create table Reply(
+replyID int primary key auto_increment,
+replyContent text,
+replyTime int,
+replyStatus int default 1,
+userID int,
+foreign key(userID) references User(userID)
+);
+
+insert into Reply(replyID,replyContent,replyTime,replyStatus,userID) values(null,'测试回复1',1478255786,1,1);
+insert into Reply(replyID,replyContent,replyTime,replyStatus,userID) values(null,'测试回复2',1478255787,0,2);
+insert into Reply(replyID,replyContent,replyTime,replyStatus,userID) values(null,'测试回复3',1478255788,1,2);
+
+create table NewsReplies(
+nrID int primary key auto_increment,
+newsID int,
+replyID int,
+foreign key(newsID) references News(newsID),
+foreign key(replyID) references Reply(replyID)
+);
+
+insert into NewsReplies(nrid,newsid,replyid) values(null,1,1);
+insert into NewsReplies(nrid,newsid,replyid) values(null,1,2);
+insert into NewsReplies(nrid,newsid,replyid) values(null,3,3);
